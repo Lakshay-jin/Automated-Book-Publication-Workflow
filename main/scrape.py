@@ -4,10 +4,7 @@ import asyncio
 import sys
 if sys.platform.startswith("win"):
     asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
-
 from playwright.sync_api import sync_playwright
-from ai_writer import spin_chapter
-from ai_reviewer import review_chapter  # chaining the next module
 from chroma_manager import add_version
 from status_tracker import update_status
 
@@ -31,7 +28,6 @@ def process_chapter(url, chapter_num):
             page = browser.new_page()
             page.goto(url, timeout=60000)
 
-            # Wait explicitly for content block or fail gracefully
             try:
                 page.wait_for_selector("div#mw-content-text", timeout=15000)
             except:
