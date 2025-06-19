@@ -6,6 +6,7 @@ from status_tracker import update_status
 from status_tracker import get_status
 from ai_writer import spin_chapter
 from ai_reviewer import review_chapter
+from smart_retriever import feedback,rl_search
 
 
 CHAPTER_DIR = "book_output"
@@ -27,9 +28,9 @@ def save_final_text(chapter_name, final_text):
         f.write(final_text)
     st.success(f"✅ Final version saved to: {final_path}")
 
+st.title("📖 Automated Book Publication")
 
-
-st.title("📖 Human-in-the-Loop Chapter Review")
+st.markdown("### Scaping the chapter")
 
 url = st.text_input("Enter ULR of the book you want to scrape", "https://en.wikisource.org/wiki/The_Gates_of_Morning")
 
@@ -38,6 +39,8 @@ if(st.button('Submit')):
         st.success("BOOK Scraped successfully")
     else:
         st.error("BOOK was not Scraped")
+
+st.markdown("### spunning and review the chapter")
 
 raw_files=get_chapter_list("raw")
 if not raw_files:
@@ -62,7 +65,7 @@ else:
                 metadata={"editor": "Human", "source": "streamlit"}
             )
 
-
+st.markdown("### Human reviewing the chapter")
 
 chapter_files = get_chapter_list("spun")
 
@@ -103,8 +106,7 @@ else:
     status = get_status(chapter_choice.replace("_spun.txt", ""))
     st.info(f"📌 Current Status: `{status.get('status', 'Unknown')}`\n🕒 Last updated: {status.get('updated_at', 'N/A')}")
 
-
-from smart_retriever import feedback,rl_search
+st.markdown("### Smart searching for phrases in the chapters")
 
 query = st.text_input("Search for chapters")
 if query:
